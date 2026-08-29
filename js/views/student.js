@@ -575,21 +575,26 @@ window.StudentView = {
         <div class="flex flex-col gap-6">
           ${myRegistrations.map(reg => {
             const event = window.db.getEventById(reg.eventId);
-            if (!event) return '';
+            const evStatus = (event.status || '').toUpperCase();
+            const isCheckedIn = reg.status === 'CHECKED_IN';
+            const hasSubmitted = !!reg.submission;
+            const isLiveOrLater = ['LIVE', 'SUBMISSION', 'JUDGING', 'RESULTS_PUBLISHED', 'COMPLETED'].includes(evStatus);
+            const isJudgingOrLater = ['JUDGING', 'RESULTS_PUBLISHED', 'COMPLETED'].includes(evStatus);
+            const isResultsPublished = !!event.resultsPublished || ['RESULTS_PUBLISHED', 'COMPLETED'].includes(evStatus);
 
-            const tracking = reg.tracking || {
+            const tracking = {
               registration: 'COMPLETED',
-              checkIn: 'PENDING',
-              eventStarted: 'PENDING',
-              submission: 'PENDING',
-              judging: 'PENDING',
-              results: 'PENDING'
+              checkIn: isCheckedIn ? 'COMPLETED' : (evStatus === 'CHECKIN_OPEN' || evStatus === 'LIVE' ? 'IN_PROGRESS' : 'PENDING'),
+              eventStarted: isLiveOrLater ? (evStatus === 'LIVE' ? 'IN_PROGRESS' : 'COMPLETED') : 'PENDING',
+              submission: hasSubmitted ? 'COMPLETED' : (['LIVE', 'SUBMISSION'].includes(evStatus) ? 'IN_PROGRESS' : 'PENDING'),
+              judging: isResultsPublished ? 'COMPLETED' : (isJudgingOrLater ? 'IN_PROGRESS' : (hasSubmitted ? 'IN_PROGRESS' : 'PENDING')),
+              results: isResultsPublished ? 'COMPLETED' : 'PENDING'
             };
 
             const steps = [
               { key: 'registration', label: 'Registration', icon: 'how_to_reg' },
               { key: 'checkIn', label: 'Check-in', icon: 'pin_drop' },
-              { key: 'eventStarted', label: 'Event Active', icon: 'flag' },
+              { key: 'eventStarted', label: evStatus === 'LIVE' ? 'Event LIVE' : 'Event Active', icon: 'flag' },
               { key: 'submission', label: 'Submission', icon: 'upload_file' },
               { key: 'judging', label: 'Evaluation', icon: 'gavel' },
               { key: 'results', label: 'Results', icon: 'trophy' }

@@ -868,17 +868,22 @@ window.OrganizerView = {
       filtered = filtered.filter(e => e.status === this.eventStatusFilter);
     }
 
-    // Sort events (PRD Section 6)
+    // Sort events (PRD Section 6 & Event Sorting)
     filtered.sort((a, b) => {
       switch (this.eventSortBy) {
         case 'most-participants': return b.participantCount - a.participantCount;
         case 'least-participants': return a.participantCount - b.participantCount;
         case 'upcoming': return new Date(a.startDate) - new Date(b.startDate);
-        case 'highest-cap': return b.capacity - a.capacity;
-        case 'lowest-cap': return a.capacity - b.capacity;
+        case 'live': return (b.status === 'LIVE' ? 1 : 0) - (a.status === 'LIVE' ? 1 : 0);
+        case 'completed': return (b.status === 'COMPLETED' || b.status === 'RESULTS_PUBLISHED' ? 1 : 0) - (a.status === 'COMPLETED' || a.status === 'RESULTS_PUBLISHED' ? 1 : 0);
+        case 'closing-soon': return new Date(a.endDate) - new Date(b.endDate);
+        case 'start-date': return new Date(a.startDate) - new Date(b.startDate);
+        case 'end-date': return new Date(a.endDate) - new Date(b.endDate);
+        case 'recent': return (b.id || '').localeCompare(a.id || '');
         case 'name-asc': return a.name.localeCompare(b.name);
         case 'name-desc': return b.name.localeCompare(a.name);
-        case 'start-date': return new Date(a.startDate) - new Date(b.startDate);
+        case 'highest-cap': return b.capacity - a.capacity;
+        case 'lowest-cap': return a.capacity - b.capacity;
         default: return 0;
       }
     });
@@ -889,7 +894,7 @@ window.OrganizerView = {
       REGISTRATION_OPEN: events.filter(e => e.status === 'REGISTRATION_OPEN').length,
       UPCOMING: events.filter(e => e.status === 'UPCOMING').length,
       LIVE: events.filter(e => e.status === 'LIVE').length,
-      COMPLETED: events.filter(e => e.status === 'COMPLETED' || e.status === 'RESULTS').length
+      COMPLETED: events.filter(e => e.status === 'COMPLETED' || e.status === 'RESULTS' || e.status === 'RESULTS_PUBLISHED').length
     };
 
     return `
@@ -923,19 +928,24 @@ window.OrganizerView = {
           `).join('')}
         </div>
 
-        <!-- Sorting Toolbar (PRD Section 6) -->
+        <!-- Sorting Toolbar (PRD Section 6 & Event Sorting) -->
         <div class="bg-surface rounded-2xl p-4 border border-outline-variant shadow-sm flex flex-wrap justify-between items-center gap-3">
           <div class="flex items-center gap-2 text-xs font-bold">
             <span class="text-on-surface-variant uppercase text-[11px]">Sort Events:</span>
             <select onchange="OrganizerView.setEventSort(this.value)" class="px-3 py-1.5 rounded-lg border border-outline-variant bg-surface text-xs font-bold focus:outline-none">
               <option value="most-participants" ${this.eventSortBy === 'most-participants' ? 'selected' : ''}>Most Participants</option>
               <option value="least-participants" ${this.eventSortBy === 'least-participants' ? 'selected' : ''}>Least Participants</option>
-              <option value="upcoming" ${this.eventSortBy === 'upcoming' ? 'selected' : ''}>Upcoming (Nearest First)</option>
+              <option value="upcoming" ${this.eventSortBy === 'upcoming' ? 'selected' : ''}>Upcoming Events</option>
+              <option value="live" ${this.eventSortBy === 'live' ? 'selected' : ''}>Live Events First</option>
+              <option value="completed" ${this.eventSortBy === 'completed' ? 'selected' : ''}>Completed Events</option>
+              <option value="closing-soon" ${this.eventSortBy === 'closing-soon' ? 'selected' : ''}>Registration Closing Soon</option>
+              <option value="start-date" ${this.eventSortBy === 'start-date' ? 'selected' : ''}>Start Date</option>
+              <option value="end-date" ${this.eventSortBy === 'end-date' ? 'selected' : ''}>End Date</option>
+              <option value="recent" ${this.eventSortBy === 'recent' ? 'selected' : ''}>Recently Created</option>
+              <option value="name-asc" ${this.eventSortBy === 'name-asc' ? 'selected' : ''}>Name A–Z</option>
+              <option value="name-desc" ${this.eventSortBy === 'name-desc' ? 'selected' : ''}>Name Z–A</option>
               <option value="highest-cap" ${this.eventSortBy === 'highest-cap' ? 'selected' : ''}>Highest Capacity</option>
               <option value="lowest-cap" ${this.eventSortBy === 'lowest-cap' ? 'selected' : ''}>Lowest Capacity</option>
-              <option value="name-asc" ${this.eventSortBy === 'name-asc' ? 'selected' : ''}>Event Name A–Z</option>
-              <option value="name-desc" ${this.eventSortBy === 'name-desc' ? 'selected' : ''}>Event Name Z–A</option>
-              <option value="start-date" ${this.eventSortBy === 'start-date' ? 'selected' : ''}>Start Date</option>
             </select>
           </div>
         </div>
