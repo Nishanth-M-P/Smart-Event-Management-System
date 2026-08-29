@@ -114,7 +114,7 @@ window.SmartEngine = {
         icon: 'info',
         color: 'text-primary',
         badge: 'Platform Ready',
-        text: 'Abhiyantrix AI engine is ready. Create events or load showcase data to see real-time insights.'
+        text: 'Abhiyantrix AI engine is ready. Create events to see real-time insights.'
       });
     }
 
@@ -132,7 +132,7 @@ window.SmartEngine = {
 
     // Query: events this week / happening
     if (q.includes('event') && (q.includes('this week') || q.includes('upcoming') || q.includes('happening') || q.includes('available') || q.includes('what'))) {
-      if (events.length === 0) return 'There are currently no events created in the database. Organizers can create events using the "+ Create New Event" wizard or click "⚡ Load Grand Fest Showcase Data".';
+      if (events.length === 0) return 'There are currently no events created in the database. Organizers can create events using the "+ Create New Event" wizard.';
       const eventList = events.slice(0, 4).map(e => `• **${e.name}** (${e.category}) - ${e.status} at *${e.venue}*`).join('\n');
       return `Here are the top events currently active on Abhiyantrix:\n\n${eventList}\n\nYou can click **"Details"** on any event card to view full tracks, schedule, and rules!`;
     }

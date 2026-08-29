@@ -69,8 +69,6 @@ Student / Attendee                 Judge Studio                  Organizer Comma
 | **Judge (Jury)** | `JDG-2026-0001` | `AXJ8-K92P-7LM4` |
 | **Student** | `darshan@campus.edu` | `password123` |
 
-*(You can also use the top-banner **⚡ Load Grand Fest Showcase Data** button to populate a 4-track festival demo in 1 second).*
-
 ---
 
 ## 📜 License

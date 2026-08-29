@@ -13,25 +13,6 @@ window.LandingView = {
     return `
       <div class="min-h-screen flex flex-col bg-background text-on-background relative overflow-x-hidden">
         
-        <!-- Top Banner: Hackathon / Fest Demo Mode Switcher Bar -->
-        <div class="bg-gradient-to-r from-[#00288e] via-[#4338ca] to-[#006a61] text-white px-4 py-2 text-xs font-semibold flex flex-wrap items-center justify-between gap-2 shadow-sm">
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#86f2e4] animate-pulse"></span>
-            <span>Abhiyantrix Official Platform — Ready for Live Institutional Evaluation</span>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button onclick="App.loadDemoFest()" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-md text-[11px] font-extrabold transition-colors flex items-center gap-1 backdrop-blur-sm shadow-sm">
-              <span class="material-symbols-outlined text-xs">bolt</span>
-              <span>⚡ Load Grand Fest Showcase Data</span>
-            </button>
-            <button onclick="App.resetDemoData()" class="px-2.5 py-1 bg-black/20 hover:bg-black/30 rounded-md text-[11px] font-bold transition-colors flex items-center gap-1 backdrop-blur-sm">
-              <span class="material-symbols-outlined text-xs">restart_alt</span>
-              <span>Clean State</span>
-            </button>
-          </div>
-        </div>
-
         <!-- Main Navigation Header -->
         <header class="bg-surface/90 text-primary flex justify-between items-center w-full px-4 md:px-margin h-16 sticky top-0 z-50 backdrop-blur-md border-b border-outline-variant/60 shadow-sm">
           <div class="flex items-center gap-2.5 cursor-pointer" onclick="App.navigate('landing')">
@@ -150,62 +131,93 @@ window.LandingView = {
                   </div>
 
                   <div class="flex border-b border-outline-variant mb-4">
-                    <button class="flex-1 pb-2 text-xs font-bold transition-colors ${LandingView.studentMode === 'login' ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant hover:text-primary'}" onclick="LandingView.toggleStudentMode('login')">
+                    <button id="btn-tab-signin" class="flex-1 pb-2 text-xs font-bold transition-colors ${LandingView.studentMode === 'login' ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant hover:text-primary'}" onclick="LandingView.toggleStudentMode('login')">
                       Sign In
                     </button>
-                    <button class="flex-1 pb-2 text-xs font-bold transition-colors ${LandingView.studentMode === 'register' ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant hover:text-primary'}" onclick="LandingView.toggleStudentMode('register')">
+                    <button id="btn-tab-signup" class="flex-1 pb-2 text-xs font-bold transition-colors ${LandingView.studentMode === 'register' ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant hover:text-primary'}" onclick="LandingView.toggleStudentMode('register')">
                       Create Account
                     </button>
                   </div>
 
-                  <form id="form-student" onsubmit="LandingView.handleStudentSubmit(event)" class="flex flex-col gap-3 text-xs">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex justify-between items-center">
-                        <label class="font-bold text-on-surface-variant">Email or Mobile Number</label>
-                        <button type="button" onclick="LandingView.fillStudentDemo()" class="text-[10px] font-bold text-secondary hover:underline">Autofill Demo</button>
-                      </div>
-                      <div class="relative">
-                        <span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-base">person</span>
-                        <input id="stu-identifier" class="w-full pl-8 pr-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:border-primary text-xs bg-surface" placeholder="darshan.p@campus.edu or student ID" required />
-                      </div>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                      <label class="font-bold text-on-surface-variant">Password</label>
-                      <div class="relative">
-                        <span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-base">lock</span>
-                        <input id="stu-password" class="w-full pl-8 pr-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:border-primary text-xs bg-surface" placeholder="••••••••" type="password" required />
-                      </div>
-                    </div>
-
-                    <div id="student-reg-fields" class="${LandingView.studentMode === 'register' ? 'flex' : 'hidden'} flex-col gap-3">
+                  ${LandingView.studentMode === 'login' ? `
+                    <!-- STUDENT LOGIN FORM -->
+                    <form id="form-student-login" onsubmit="LandingView.handleStudentLogin(event)" class="flex flex-col gap-3 text-xs animate-fade-in">
                       <div class="flex flex-col gap-1">
-                        <label class="font-bold text-on-surface-variant">Full Name</label>
-                        <input id="stu-name" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. Darshan Patel" />
+                        <div class="flex justify-between items-center">
+                          <label class="font-bold text-on-surface-variant">Email, Mobile, or Student ID *</label>
+                          <button type="button" onclick="LandingView.fillStudentDemo()" class="text-[10px] font-bold text-secondary hover:underline">Autofill Demo</button>
+                        </div>
+                        <div class="relative">
+                          <span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-base">person</span>
+                          <input id="stu-login-identifier" class="w-full pl-8 pr-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:border-primary text-xs bg-surface" placeholder="darshan@campus.edu or STU-10001" required />
+                        </div>
+                      </div>
+
+                      <div class="flex flex-col gap-1">
+                        <label class="font-bold text-on-surface-variant">Password *</label>
+                        <div class="relative">
+                          <span class="material-symbols-outlined text-outline absolute left-3 top-2.5 text-base">lock</span>
+                          <input id="stu-login-password" class="w-full pl-8 pr-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:border-primary text-xs bg-surface" placeholder="••••••••" type="password" required />
+                        </div>
+                      </div>
+
+                      <button id="btn-access-portal" type="submit" class="mt-2 w-full py-2.5 rounded-lg bg-primary text-on-primary font-bold text-xs shadow hover:opacity-95 flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span class="material-symbols-outlined text-base">login</span>
+                        <span>Access Student Portal</span>
+                      </button>
+                    </form>
+                  ` : `
+                    <!-- STUDENT REGISTER FORM -->
+                    <form id="form-student-register" onsubmit="LandingView.handleStudentRegister(event)" class="flex flex-col gap-2.5 text-xs animate-fade-in max-h-[60vh] overflow-y-auto pr-1">
+                      <div class="flex flex-col gap-1">
+                        <label class="font-bold text-on-surface-variant">Full Name *</label>
+                        <input id="stu-reg-name" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. Darshan Patel" required />
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-2">
+                        <div class="flex flex-col gap-1">
+                          <label class="font-bold text-on-surface-variant">Email Address *</label>
+                          <input id="stu-reg-email" type="email" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="darshan@campus.edu" required />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                          <label class="font-bold text-on-surface-variant">Mobile Number *</label>
+                          <input id="stu-reg-mobile" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="+91 98765 43210" required />
+                        </div>
                       </div>
 
                       <div class="grid grid-cols-2 gap-2">
                         <div class="flex flex-col gap-1">
                           <label class="font-bold text-on-surface-variant">College / Institution *</label>
-                          <input id="stu-college" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. NITK Surathkal" required />
+                          <input id="stu-reg-college" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. NITK Surathkal" required />
                         </div>
                         <div class="flex flex-col gap-1">
                           <label class="font-bold text-on-surface-variant">Department / Course *</label>
-                          <input id="stu-dept" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. Computer Science" required />
+                          <input id="stu-reg-dept" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. Computer Science" required />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-2">
+                        <div class="flex flex-col gap-1">
+                          <label class="font-bold text-on-surface-variant">Password *</label>
+                          <input id="stu-reg-password" type="password" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="••••••••" required />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                          <label class="font-bold text-on-surface-variant">Confirm Password *</label>
+                          <input id="stu-reg-conf-password" type="password" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="••••••••" required />
                         </div>
                       </div>
 
                       <div class="flex flex-col gap-1">
-                        <label class="font-bold text-on-surface-variant">Skills / Domain Interests</label>
-                        <input id="stu-skills" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. React, Python, Machine Learning, UI/UX" />
+                        <label class="font-bold text-on-surface-variant">Skills / Interests <span class="text-on-surface-variant font-normal">(Optional)</span></label>
+                        <input id="stu-reg-skills" class="w-full px-3 py-2 border border-outline-variant rounded-lg text-xs bg-surface" placeholder="e.g. React, Python, Machine Learning" />
                       </div>
-                    </div>
 
-                    <button type="submit" class="mt-2 w-full py-2.5 rounded-lg bg-primary text-on-primary font-bold text-xs shadow hover:opacity-95 flex items-center justify-center gap-1.5">
-                      <span class="material-symbols-outlined text-base">login</span>
-                      <span>${LandingView.studentMode === 'login' ? 'Access Student Portal' : 'Register Account'}</span>
-                    </button>
-                  </form>
+                      <button id="btn-create-account" type="submit" class="mt-2 w-full py-2.5 rounded-lg bg-primary text-on-primary font-bold text-xs shadow hover:opacity-95 flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span class="material-symbols-outlined text-base">person_add</span>
+                        <span>Create Account & Enter Portal</span>
+                      </button>
+                    </form>
+                  `}
                 </div>
 
                 <!-- JUDGE AUTH -->
@@ -285,22 +297,6 @@ window.LandingView = {
 
               </div>
 
-              <!-- Quick Demo Access Footer -->
-              <div class="p-3 bg-surface-container border-t border-outline-variant flex items-center justify-between text-xs">
-                <span class="text-on-surface-variant font-bold">1-Click Switcher:</span>
-                <div class="flex gap-1.5">
-                  <button onclick="App.navigate('student')" class="px-2 py-1 bg-surface border border-outline-variant rounded text-primary font-bold hover:border-primary">
-                    Student
-                  </button>
-                  <button onclick="App.navigate('judge')" class="px-2 py-1 bg-surface border border-outline-variant rounded text-tertiary font-bold hover:border-tertiary">
-                    Judge
-                  </button>
-                  <button onclick="App.navigate('organizer')" class="px-2 py-1 bg-surface border border-outline-variant rounded text-secondary font-bold hover:border-secondary">
-                    Organizer
-                  </button>
-                </div>
-              </div>
-
             </div>
           </section>
         </main>
@@ -373,33 +369,50 @@ window.LandingView = {
   },
 
   fillStudentDemo() {
+    this.studentMode = 'login';
+    this.activeTab = 'student';
+    App.render();
     const student = window.db.getUsers().find(u => u.role === 'student');
     if (student) {
-      document.getElementById('stu-identifier').value = student.email || student.studentId;
-      document.getElementById('stu-password').value = student.password || 'password123';
-      App.toast(`Filled credentials for ${student.name}`, 'info');
+      setTimeout(() => {
+        const idElem = document.getElementById('stu-login-identifier');
+        const pwdElem = document.getElementById('stu-login-password');
+        if (idElem) idElem.value = student.email || student.studentId;
+        if (pwdElem) pwdElem.value = student.password || 'password123';
+        App.toast(`Autofilled credentials for ${student.name}`, 'info');
+      }, 50);
     } else {
-      App.toast('Load fest showcase data to autofill test credentials.', 'info');
+      App.toast('No student account in database. Use "Create Account" tab to register.', 'info');
     }
   },
 
   fillJudgeDemo() {
+    this.activeTab = 'judge';
+    App.render();
     const judge = window.db.getUsers().find(u => u.role === 'judge');
     if (judge) {
-      document.getElementById('judge-id').value = judge.judgeId;
-      document.getElementById('judge-key').value = judge.judgeKey;
-      App.toast(`Filled credentials for ${judge.name} (${judge.judgeId})`, 'info');
-    } else {
-      App.toast('Load fest showcase data to autofill judge credentials.', 'info');
+      setTimeout(() => {
+        const idElem = document.getElementById('judge-id');
+        const keyElem = document.getElementById('judge-key');
+        if (idElem) idElem.value = judge.judgeId;
+        if (keyElem) keyElem.value = judge.judgeKey;
+        App.toast(`Autofilled credentials for ${judge.name}`, 'info');
+      }, 50);
     }
   },
 
   fillOrganizerDemo() {
+    this.activeTab = 'organizer';
+    App.render();
     const org = window.db.getUsers().find(u => u.role === 'organizer');
     if (org) {
-      document.getElementById('org-email').value = org.email;
-      document.getElementById('org-password').value = org.password || 'password123';
-      App.toast(`Filled credentials for ${org.name}`, 'info');
+      setTimeout(() => {
+        const emailElem = document.getElementById('org-email');
+        const pwdElem = document.getElementById('org-password');
+        if (emailElem) emailElem.value = org.email;
+        if (pwdElem) pwdElem.value = org.password || 'password123';
+        App.toast(`Autofilled credentials for ${org.name}`, 'info');
+      }, 50);
     }
   },
 
@@ -419,43 +432,80 @@ window.LandingView = {
     App.render();
   },
 
-  handleStudentSubmit(e) {
+  handleStudentLogin(e) {
     e.preventDefault();
+    const btn = document.getElementById('btn-access-portal');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">progress_activity</span><span>Signing in...</span>`;
+    }
+
     try {
-      if (this.studentMode === 'login') {
-        const identifier = document.getElementById('stu-identifier').value;
-        const password = document.getElementById('stu-password').value;
-        const user = window.auth.loginStudent(identifier, password);
-        App.toast(`Welcome back, ${user.name}!`, 'success');
-        App.navigate('student');
-      } else {
-        const name = document.getElementById('stu-name').value;
-        const identifier = document.getElementById('stu-identifier').value;
-        const password = document.getElementById('stu-password').value;
-        const college = document.getElementById('stu-college').value;
-        const department = document.getElementById('stu-dept').value;
-        const skills = document.getElementById('stu-skills').value;
+      const identifier = document.getElementById('stu-login-identifier').value.trim();
+      const password = document.getElementById('stu-login-password').value;
 
-        if (!name) {
-          App.toast('Please enter your full name', 'error');
-          return;
-        }
-
-        const isEmail = identifier.includes('@');
-        const user = window.auth.registerStudent({
-          name,
-          email: isEmail ? identifier : `${name.toLowerCase().replace(/\s+/g, '.')}@campus.edu`,
-          mobile: isEmail ? '+9198' + Math.floor(10000000 + Math.random() * 90000000) : identifier,
-          password,
-          college: college || 'Institution',
-          department: department || 'Course / Department',
-          skills: skills || ''
-        });
-
-        App.toast(`Account created! Student ID: ${user.studentId}`, 'success');
-        App.navigate('student');
+      if (!identifier) {
+        throw new Error('Please enter your email address, mobile number, or Student ID.');
       }
+      if (!password) {
+        throw new Error('Please enter your password.');
+      }
+
+      const user = window.auth.loginStudent(identifier, password);
+      App.toast(`Welcome back, ${user.name}! Accessing portal...`, 'success');
+      App.navigate('student');
     } catch (err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined text-base">login</span><span>Access Student Portal</span>`;
+      }
+      App.toast(err.message, 'error');
+    }
+  },
+
+  handleStudentRegister(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-create-account');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">progress_activity</span><span>Creating account...</span>`;
+    }
+
+    try {
+      const name = document.getElementById('stu-reg-name').value.trim();
+      const email = document.getElementById('stu-reg-email').value.trim();
+      const mobile = document.getElementById('stu-reg-mobile').value.trim();
+      const college = document.getElementById('stu-reg-college').value.trim();
+      const department = document.getElementById('stu-reg-dept').value.trim();
+      const password = document.getElementById('stu-reg-password').value;
+      const confPassword = document.getElementById('stu-reg-conf-password').value;
+      const skills = document.getElementById('stu-reg-skills').value.trim();
+
+      if (!name) throw new Error('Please enter your full name.');
+      if (!email) throw new Error('Please enter a valid email address.');
+      if (!mobile) throw new Error('Please enter your mobile number.');
+      if (!college) throw new Error('Please enter your college/institution.');
+      if (!department) throw new Error('Please enter your department/course.');
+      if (!password) throw new Error('Please enter a password.');
+      if (password !== confPassword) throw new Error('Passwords do not match. Please verify.');
+
+      const user = window.auth.registerStudent({
+        name,
+        email,
+        mobile,
+        college,
+        department,
+        password,
+        skills
+      });
+
+      App.toast(`Account created successfully! Student ID: ${user.studentId}`, 'success');
+      App.navigate('student');
+    } catch (err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined text-base">person_add</span><span>Create Account & Enter Portal</span>`;
+      }
       App.toast(err.message, 'error');
     }
   },

@@ -53,18 +53,31 @@ class AuthService {
 
   // Student Login
   loginStudent(identifier, password) {
-    const cleaned = identifier.trim().toLowerCase();
-    const user = window.db.findUser(u => 
-      u.role === 'student' && 
-      (u.email.toLowerCase() === cleaned || u.mobile.replace(/\D/g, '') === cleaned.replace(/\D/g, '') || (u.studentId && u.studentId.toLowerCase() === cleaned))
-    );
-
-    if (!user) {
-      throw new Error('Student account not found with this email, mobile number, or student ID.');
+    if (!identifier || !identifier.trim()) {
+      throw new Error('Please enter your email, mobile number, or student ID.');
+    }
+    if (!password) {
+      throw new Error('Please enter your password.');
     }
 
-    if (password && user.password && user.password !== password) {
-      throw new Error('Invalid password.');
+    const cleaned = identifier.trim().toLowerCase();
+    const cleanDigits = identifier.replace(/\D/g, '');
+
+    const user = window.db.findUser(u => {
+      if (!u || (u.role && u.role.toLowerCase() !== 'student')) return false;
+      const matchEmail = u.email && u.email.toLowerCase() === cleaned;
+      const matchId = u.studentId && u.studentId.toLowerCase() === cleaned;
+      const uDigits = u.mobile ? u.mobile.replace(/\D/g, '') : '';
+      const matchMobile = cleanDigits.length >= 7 && uDigits.length >= 7 && (uDigits.includes(cleanDigits) || cleanDigits.includes(uDigits));
+      return matchEmail || matchId || matchMobile;
+    });
+
+    if (!user) {
+      throw new Error('Invalid email/mobile number or password.');
+    }
+
+    if (user.password && user.password !== password) {
+      throw new Error('Invalid email/mobile number or password.');
     }
 
     user.lastLogin = new Date().toISOString();
@@ -79,10 +92,15 @@ class AuthService {
   registerStudent(formData) {
     const emailClean = formData.email.trim().toLowerCase();
     const mobileClean = formData.mobile.trim();
+    const cleanDigits = mobileClean.replace(/\D/g, '');
 
-    const existing = window.db.findUser(u => 
-      u.role === 'student' && (u.email.toLowerCase() === emailClean || u.mobile === mobileClean)
-    );
+    const existing = window.db.findUser(u => {
+      if (!u || (u.role && u.role.toLowerCase() !== 'student')) return false;
+      const matchEmail = u.email && u.email.toLowerCase() === emailClean;
+      const uDigits = u.mobile ? u.mobile.replace(/\D/g, '') : '';
+      const matchMobile = cleanDigits.length >= 7 && uDigits.length >= 7 && uDigits === cleanDigits;
+      return matchEmail || matchMobile;
+    });
 
     if (existing) {
       throw new Error('An account with this email address or mobile number already exists.');

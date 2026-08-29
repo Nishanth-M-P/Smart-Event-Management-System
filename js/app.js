@@ -21,61 +21,56 @@ window.App = {
   },
 
   navigate(route) {
-    // Role guard check
     const user = window.auth.getCurrentUser();
-    if (route === 'student' && (!user || user.role !== 'student')) {
-      // If student not logged in, auto-login student if in demo mode or navigate to landing
-      const student = window.db.getUsers().find(u => u.role === 'student');
-      if (student) {
-        window.auth.saveSession(student);
-        this.currentRoute = 'student';
-        this.toast(`Signed in as student: ${student.name}`, 'info');
+    const role = (user && user.role) ? user.role.toLowerCase() : null;
+
+    if (route === 'student') {
+      if (!user || role !== 'student') {
+        this.toast('Please sign in with your student credentials to access the Student Portal.', 'info');
+        this.currentRoute = 'landing';
+        LandingView.activeTab = 'student';
+        LandingView.studentMode = 'login';
         window.scrollTo(0, 0);
         this.render();
         return;
       }
-      this.toast('Please create or log into a student account.', 'info');
-      this.currentRoute = 'landing';
-      LandingView.activeTab = 'student';
-      this.render();
-      return;
-    }
-    
-    if (route === 'judge' && (!user || user.role !== 'judge')) {
-      const judge = window.db.getUsers().find(u => u.role === 'judge');
-      if (judge) {
-        window.auth.saveSession(judge);
-        this.currentRoute = 'judge';
-        this.toast(`Signed in as judge: ${judge.name}`, 'info');
-        window.scrollTo(0, 0);
-        this.render();
-        return;
-      }
-      this.toast('Please authenticate with a Judge ID & Key.', 'info');
-      this.currentRoute = 'landing';
-      LandingView.activeTab = 'judge';
+      this.currentRoute = 'student';
+      window.scrollTo(0, 0);
       this.render();
       return;
     }
 
-    if (route === 'organizer' && (!user || user.role !== 'organizer')) {
-      const org = window.db.getUsers().find(u => u.role === 'organizer');
-      if (org) {
-        window.auth.saveSession(org);
-        this.currentRoute = 'organizer';
-        this.toast(`Signed in as Organizer: ${org.name}`, 'info');
+    if (route === 'judge') {
+      if (!user || role !== 'judge') {
+        this.toast('Please authenticate with a Judge ID & Secret Key.', 'info');
+        this.currentRoute = 'landing';
+        LandingView.activeTab = 'judge';
         window.scrollTo(0, 0);
         this.render();
         return;
       }
-      this.toast('Organizer master credentials required.', 'info');
-      this.currentRoute = 'landing';
-      LandingView.activeTab = 'organizer';
+      this.currentRoute = 'judge';
+      window.scrollTo(0, 0);
       this.render();
       return;
     }
 
-    this.currentRoute = route;
+    if (route === 'organizer') {
+      if (!user || role !== 'organizer') {
+        this.toast('Organizer credentials required to access Command Center.', 'info');
+        this.currentRoute = 'landing';
+        LandingView.activeTab = 'organizer';
+        window.scrollTo(0, 0);
+        this.render();
+        return;
+      }
+      this.currentRoute = 'organizer';
+      window.scrollTo(0, 0);
+      this.render();
+      return;
+    }
+
+    this.currentRoute = 'landing';
     window.scrollTo(0, 0);
     this.render();
   },
