@@ -1708,22 +1708,6 @@ window.OrganizerView = {
             </div>
           </form>
         </div>
-
-        <!-- Live Demo Showcase Suite -->
-        <div class="bg-surface rounded-2xl border border-secondary/30 p-6 shadow-sm">
-          <h4 class="text-sm font-extrabold text-secondary uppercase tracking-wider mb-2 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base">bolt</span> Live Demo & Showcase Suite
-          </h4>
-          <p class="text-xs text-on-surface-variant mb-4">Instantly populate a comprehensive university festival dataset (AI Hackathon, RoboWars, CyberShield CTF, Natya Dance) with live teams, deliverable repositories, and evaluations.</p>
-          <div class="flex flex-wrap gap-3">
-            <button onclick="App.loadDemoFest()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-xs shadow flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm">bolt</span> ⚡ Load Grand Fest Showcase Data
-            </button>
-            <button onclick="App.resetDemoData()" class="px-4 py-2.5 rounded-xl bg-surface border border-outline-variant hover:border-error text-error font-bold text-xs flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm">restart_alt</span> Reset to Clean State
-            </button>
-          </div>
-        </div>
       </section>
     `;
   },
