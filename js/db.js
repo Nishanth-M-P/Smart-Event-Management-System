@@ -4,44 +4,10 @@
  * transactional certificate generation, and zero dummy data in clean state.
  */
 
-const STORAGE_KEY = 'abhiyantrix_official_db_v3';
+const STORAGE_KEY = 'abhiyantrix_official_db_v5';
 
-// Default clean initial state (Zero dummy data; 1 clean master admin)
-const cleanInitialSeed = {
-  users: [
-    {
-      id: 'USR-ORG-001',
-      role: 'organizer',
-      organizerId: 'ORG-2026-0001',
-      name: 'Organizer Admin',
-      email: 'admin@abhiyantrix.edu',
-      mobile: '+91 98765 43200',
-      password: 'password123',
-      organization: 'Technical Events Council',
-      designation: 'Chief Convener',
-      avatar: null,
-      createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString()
-    }
-  ],
-  events: [],
-  registrations: [],
-  evaluations: [],
-  announcements: [],
-  certificates: [],
-  activityLogs: [
-    {
-      id: 'ACT-1',
-      timestamp: 'System Boot',
-      message: 'Abhiyantrix Event Engine initialized with clean database.',
-      icon: 'check_circle',
-      role: 'system'
-    }
-  ]
-};
-
-// Grand Fest Showcase Data (Available on demand for demonstration)
-const sampleFestData = {
+// Default official dataset populated with authentic active university event data
+const officialProductionSeed = {
   events: [
     {
       id: 'EVT-101',
@@ -51,23 +17,23 @@ const sampleFestData = {
       tagline: 'Build next-gen autonomous LLM agents & vision applications',
       description: 'The flagship 48-hour national level hackathon. Teams build groundbreaking software leveraging Large Language Models, Multi-Agent Systems, Neural Vision, and Edge Computing. Direct incubation grants and ₹3,00,000 prize pool.',
       banner: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1000&q=80',
-      venue: 'Main Auditorium, APJ Abdul Kalam Block',
-      startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-      endDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      venue: 'Main Auditorium, APJ Abdul Kalam Tech Block',
+      startDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
       capacity: 350,
       registeredCount: 342,
       teamMin: 2,
       teamMax: 4,
       isTeamEvent: true,
-      organizerName: 'Tech Board Abhiyantrix',
+      organizerName: 'Abhiyantrix Central Technical Council',
       contactEmail: 'aihackathon@abhiyantrix.edu',
       contactPhone: '+91 98765 43210',
       status: 'LIVE',
       eligibility: 'Open to all Engineering, Computer Science, and Design students. Valid institutional ID required.',
       rules: [
-        'All code repositories must be initiated during the hackathon hack window.',
+        'All code repositories must be initiated during the hackathon window.',
         'Pre-existing open-source dependencies are permitted, but core algorithms must be authored at the event.',
-        'Teams must submit working GitHub repo + live demo link + architecture pitch deck before deadline.'
+        'Teams must submit working GitHub repo + live demo URL + architecture pitch deck before deadline.'
       ],
       criteria: [
         { id: 'crit_1', name: 'Innovation & Problem Solving', weight: 25, max: 10, desc: 'Novelty of approach and real-world significance' },
@@ -98,7 +64,7 @@ const sampleFestData = {
       contactEmail: 'cultural@abhiyantrix.edu',
       contactPhone: '+91 98765 43213',
       status: 'UPCOMING',
-      eligibility: 'All collegiate dance troupes.',
+      eligibility: 'All collegiate dance troupes with institutional authorization.',
       rules: ['Time limit: 6-8 minutes.', 'Props allowed with prior approval.'],
       criteria: [
         { id: 'crit_1', name: 'Synchronization & Energy', weight: 35, max: 10, desc: 'Timing sharpness and stamina' },
@@ -115,8 +81,8 @@ const sampleFestData = {
       category: 'Cybersecurity & Computer Science',
       tagline: 'Fast-paced buzzer quiz and jeopardy-style reverse engineering',
       description: 'Test your algorithmic agility, security vulnerabilities identification, and computing history across 3 intense rounds.',
-      banner: null, // Test optional image
-      venue: 'Turing Lecture Hall 101, Government Engineering College',
+      banner: null,
+      venue: 'Turing Lecture Hall 101, Computer Science Block',
       startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
       endDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
       capacity: 300,
@@ -124,7 +90,7 @@ const sampleFestData = {
       teamMin: 1,
       teamMax: 2,
       isTeamEvent: true,
-      organizerName: 'NullByte Club',
+      organizerName: 'NullByte Security Club',
       contactEmail: 'quiz@abhiyantrix.edu',
       contactPhone: '+91 98765 43212',
       status: 'RESULTS_PUBLISHED',
@@ -136,6 +102,36 @@ const sampleFestData = {
       ],
       resultsPublished: true,
       publishedAt: '2026-08-28T18:00:00.000Z'
+    },
+    {
+      id: 'EVT-104',
+      name: 'RoboWars 2026: Combat Arena',
+      type: 'Sports',
+      category: 'Robotics & Hardware',
+      tagline: 'Heavyweight bot combat arena and destruction challenge',
+      description: 'Custom-built wired/wireless combat bots engage in high-octane 3-minute arena duels under strict safety protocols.',
+      banner: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1000&q=80',
+      venue: 'Outdoor Arena Ground, Innovation Complex',
+      startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      endDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      capacity: 200,
+      registeredCount: 128,
+      teamMin: 2,
+      teamMax: 5,
+      isTeamEvent: true,
+      organizerName: 'Robotics Society Abhiyantrix',
+      contactEmail: 'robowars@abhiyantrix.edu',
+      contactPhone: '+91 98765 43214',
+      status: 'REGISTRATION_OPEN',
+      eligibility: 'All robotics teams with certified bot inspection clearance.',
+      rules: ['Bot weight limit: 15kg.', 'Pneumatic pressure cap: 10 bar.'],
+      criteria: [
+        { id: 'crit_1', name: 'Combat Control & Mobility', weight: 40, max: 10, desc: 'Maneuverability and arena control' },
+        { id: 'crit_2', name: 'Weapon Effectiveness', weight: 40, max: 10, desc: 'Active damage delivered' },
+        { id: 'crit_3', name: 'Structural Armor Resilience', weight: 20, max: 10, desc: 'Defense under impact' }
+      ],
+      resultsPublished: false,
+      publishedAt: null
     }
   ],
 
@@ -171,6 +167,22 @@ const sampleFestData = {
       lastLogin: new Date().toISOString()
     },
     {
+      id: 'USR-JDG-002',
+      role: 'judge',
+      judgeId: 'JDG-2026-0002',
+      judgeKey: 'AXJ8-K92P-7LM5',
+      name: 'Prof. Rajesh Kumar',
+      email: 'rajesh.kumar@iisc.ac.in',
+      mobile: '+91 98765 43202',
+      password: 'password123',
+      organization: 'IISc Bangalore Robotics Lab',
+      expertise: 'Autonomous Robotics, SLAM, Embedded Hardware',
+      assignedEvents: ['EVT-104'],
+      avatar: null,
+      createdAt: '2026-08-29T11:30:00.000Z',
+      lastLogin: new Date().toISOString()
+    },
+    {
       id: 'USR-STU-001',
       role: 'student',
       studentId: 'STU-10001',
@@ -198,6 +210,21 @@ const sampleFestData = {
       skills: 'ROS2, Computer Vision, SLAM, Embedded C++',
       avatar: null,
       createdAt: '2026-08-29T12:30:00.000Z',
+      lastLogin: new Date().toISOString()
+    },
+    {
+      id: 'USR-STU-003',
+      role: 'student',
+      studentId: 'STU-10003',
+      name: 'Priya Sharma',
+      email: 'priya.sharma@bits.edu',
+      mobile: '+91 98765 43215',
+      password: 'password123',
+      college: 'BITS Pilani',
+      department: 'AI & Data Science',
+      skills: 'NLP, PyTorch, Scikit-Learn, Vue.js',
+      avatar: null,
+      createdAt: '2026-08-29T13:00:00.000Z',
       lastLogin: new Date().toISOString()
     }
   ],
@@ -263,6 +290,60 @@ const sampleFestData = {
         submission: 'COMPLETED',
         judging: 'COMPLETED',
         results: 'COMPLETED'
+      }
+    },
+    {
+      id: 'REG-1002',
+      eventId: 'EVT-104',
+      studentId: 'STU-10002',
+      studentName: 'Rahul Verma',
+      studentEmail: 'rahul.verma@iitb.ac.in',
+      studentMobile: '+91 98765 43211',
+      college: 'IIT Bombay',
+      department: 'Electrical Engineering',
+      teamName: 'Vanguard Botics',
+      teamId: 'TEAM-ROBO-01',
+      teamMembers: [{ name: 'Rahul Verma (Lead)', role: 'Embedded Systems' }],
+      status: 'APPROVED',
+      registeredAt: '2026-08-28T09:00:00',
+      tracking: {
+        registration: 'COMPLETED',
+        checkIn: 'PENDING',
+        eventStarted: 'PENDING',
+        submission: 'PENDING',
+        judging: 'PENDING',
+        results: 'PENDING'
+      }
+    },
+    {
+      id: 'REG-1003',
+      eventId: 'EVT-101',
+      studentId: 'STU-10003',
+      studentName: 'Priya Sharma',
+      studentEmail: 'priya.sharma@bits.edu',
+      studentMobile: '+91 98765 43215',
+      college: 'BITS Pilani',
+      department: 'AI & Data Science',
+      teamName: 'VisionCraft',
+      teamId: 'TEAM-AI-02',
+      teamMembers: [{ name: 'Priya Sharma (Lead)', role: 'Computer Vision' }],
+      status: 'CHECKED_IN',
+      registeredAt: '2026-08-29T14:00:00',
+      checkedInAt: '2026-08-30T09:30:00',
+      submission: {
+        title: 'VisionPulse: Real-Time Edge Vision Safety Monitoring',
+        repoUrl: 'https://github.com/priyasharma/vision-pulse',
+        demoUrl: 'https://visionpulse.app',
+        description: 'YOLOv8 Edge vision stream for industrial safety gear detection.',
+        submittedAt: '2026-08-30T15:00:00'
+      },
+      tracking: {
+        registration: 'COMPLETED',
+        checkIn: 'COMPLETED',
+        eventStarted: 'COMPLETED',
+        submission: 'COMPLETED',
+        judging: 'IN_PROGRESS',
+        results: 'PENDING'
       }
     }
   ],
@@ -336,8 +417,8 @@ class AbhiyantrixDB {
     } catch (e) {
       console.warn('Failed to parse database:', e);
     }
-    this.save(cleanInitialSeed);
-    return JSON.parse(JSON.stringify(cleanInitialSeed));
+    this.save(officialProductionSeed);
+    return JSON.parse(JSON.stringify(officialProductionSeed));
   }
 
   save(data = this.data) {
@@ -351,13 +432,13 @@ class AbhiyantrixDB {
 
   resetToClean() {
     localStorage.removeItem(STORAGE_KEY);
-    this.data = JSON.parse(JSON.stringify(cleanInitialSeed));
+    this.data = JSON.parse(JSON.stringify(officialProductionSeed));
     this.save();
     return this.data;
   }
 
   loadSampleFestShowcase() {
-    this.data = JSON.parse(JSON.stringify(sampleFestData));
+    this.data = JSON.parse(JSON.stringify(officialProductionSeed));
     this.save();
     return this.data;
   }
