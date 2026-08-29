@@ -71,6 +71,19 @@ Student / Attendee                 Judge Studio                  Organizer Comma
 
 ---
 
+## 🌐 Vercel Production Deployment
+
+1. Import repository `https://github.com/Nishanth-M-P/Smart-Event-Management-System` into Vercel.
+2. Select Framework Preset: **Other / Other (Static)**.
+3. Root Directory: `./`
+4. Build Command: Leave blank (Static HTML/JS SPA).
+5. Output Directory: `./`
+6. Click **Deploy**.
+
+Vercel will build and serve the application with automatic SPA routing rewrites handled via `vercel.json`.
+
+---
+
 ## 📜 License
 
 Distributed under the MIT License. Built with ❤️ for Hackathons & Technical Festivals.
